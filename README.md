@@ -1,24 +1,24 @@
-# [Project Name] 🎯
+# Second Chance Website 🎯
 
 ## Basic Details
 
-### Team Name: [Name]
+### Team Name: wild orEnge
 
 ### Team Members
-- Member 1: [Name] - [College]
-- Member 2: [Name] - [College]
+- Member 1: Eshal - KMCT collage of engineering for women
+- Member 2: Rasheeda basheer - KMCT collage of engineering for women
 
 ### Hosted Project Link
-[mention your project hosted link here]
+https://preeminent-piroshki-0d5b9a.netlify.app/
 
 ### Project Description
-[2-3 lines about what your project does]
+Website to help abused women and children in need during truamatic situations.
 
-### The Problem statement
-[What problem are you solving?]
+### The Problem statementit 
+Problem of where a women and children can go after leaving their trumatic situations.
 
 ### The Solution
-[How are you solving it?]
+Our website solve the problem of where to go and what to do after leaving the truamtic situation.We help in making sure that they have a stable life after that kind of situation.
 
 ---
 
@@ -37,10 +37,15 @@
 ## Features
 
 List the key features of your project:
-- Feature 1: [Description]
-- Feature 2: [Description]
-- Feature 3: [Description]
-- Feature 4: [Description]
+- Feature 1:
+- EMERGENCY SOS SYSTEM: A lifeline that's always one tap away
+- Feature 2:
+- REAL-TIME SHELTER MAP: Instant visual answers to 'Where can I go right now?
+- Feature 3:
+- MULTI-CRITERIA FILTERING: Every survivor finds exactly what they need.
+- Feature 4:
+- GEOLOCATION & DISTANCE TRACKING: When every mile matters, we show the closest help
+
 
 ---
 
@@ -61,12 +66,13 @@ List the key features of your project:
 
 ## AI Tools Used (Optional - For Transparency Bonus)
 
+
 If you used AI tools during development, document them here for transparency:
 
-**Tool Used:** [e.g., GitHub Copilot, v0.dev, Cursor, ChatGPT, Claude]
+**Tool Used:** ChatGPT (OpenAI) & Claude
 
 **Purpose:** [What you used it for]
-- Example: "Generated boilerplate React components"
+- Example: Map Integration
 - Example: "Debugging assistance for async functions"
 - Example: "Code review and optimization suggestions"
 
@@ -75,7 +81,7 @@ If you used AI tools during development, document them here for transparency:
 - "Debug this async function that's causing race conditions"
 - "Optimize this database query for better performance"
 
-**Percentage of AI-generated code:** [Approximately X%]
+**Percentage of AI-generated code:** [Approximately 50%]
 
 **Human Contributions:**
 - Architecture design and planning
@@ -85,15 +91,7 @@ If you used AI tools during development, document them here for transparency:
 
 *Note: Proper documentation of AI usage demonstrates transparency and earns bonus points in evaluation!*
 
----
 
-## Team Contributions
-
-- [Name 1]: [Specific contributions - e.g., Frontend development, API integration, etc.]
-- [Name 2]: [Specific contributions - e.g., Backend development, Database design, etc.]
-- [Name 3]: [Specific contributions - e.g., UI/UX design, Testing, Documentation, etc.]
-
----
 
 ## License
 
