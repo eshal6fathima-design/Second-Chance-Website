@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Women's Education & Career Survey - Second Chance</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        :root { --primary: #4a6b8a; --secondary: #c44545; --accent: #2c3e50; }
+        
+        .navbar { background: linear-gradient(135deg, var(--accent), #1a2632) !important; }
+        .navbar-brand { color: white; font-weight: 700; }
+        .navbar-brand span { color: var(--secondary); }
+        
+        .survey-container {
+            max-width: 800px;
+            margin: 100px auto 50px;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            background: var(--secondary);
+        }
+        
+        .question {
+            display: none;
+        }
+        
+        .question.active {
+            display: block;
+        }
+        
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--accent);
+        }
+        
+        .option-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-card:hover {
+            border-color: var(--secondary);
+            background: #fff5f5;
+        }
+        
+        .option-card.selected {
+            border-color: var(--secondary);
+            background: #fff5f5;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .btn-nav {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-prev {
+            background: #e0e0e0;
+            color: #666;
+        }
+        
+        .btn-next {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-submit {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        
+        .result-card {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .result-card.show {
+            display: block;
+        }
+        
+        .career-path {
+            background: #f8f9fa;
+            border-left: 5px solid var(--secondary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+        }
+        
+        .interest-tag {
+            background: #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Second <span>Chance</span></a>
+            <a href="education.html" class="btn btn-outline-light">← Back to Education</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="survey-container">
+            <h2 class="text-center mb-4">Women's Education & Career Survey</h2>
+            <p class="text-center text-muted mb-4">Answer a few questions to help us find the best path for you</p>
+            
+            <!-- Progress Bar -->
+            <div class="progress">
+                <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+            </div>
+            
+            <!-- Survey Form -->
+            <form id="womenSurvey">
+                <!-- Question 1: Highest Education -->
+                <div class="question active" id="q1">
+                    <div class="question-title">1. What is your highest level of education?</div>
+                    <div class="option-card" onclick="selectOption('q1', 'none')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="education" id="edu1" value="none">
+                            <label class="form-check-label" for="edu1">No formal education</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q1', 'primary')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="education" id="edu2" value="primary">
+                            <label class="form-check-label" for="edu2">Primary school (some or completed)</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q1', 'secondary')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="education" id="edu3" value="secondary">
+                            <label class="form-check-label" for="edu3">Secondary school / High school (some)</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q1', 'highschool')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="education" id="edu4" value="highschool">
+                            <label class="form-check-label" for="edu4">High school diploma / GED</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q1', 'college')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="education" id="edu5" value="college">
+                            <label class="form-check-label" for="edu5">Some college / Technical school</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q1', 'degree')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="education" id="edu6" value="degree">
+                            <label class="form-check-label" for="edu6">College degree or higher</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 2: Career Interests -->
+                <div class="question" id="q2">
+                    <div class="question-title">2. What type of work interests you most?</div>
+                    <div class="option-card" onclick="selectOption('q2', 'healthcare')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career1" value="healthcare">
+                            <label class="form-check-label" for="career1">Healthcare & Nursing</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q2', 'business')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career2" value="business">
+                            <label class="form-check-label" for="career2">Office / Administrative</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q2', 'education')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career3" value="education">
+                            <label class="form-check-label" for="career3">Education & Childcare</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q2', 'tech')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career4" value="tech">
+                            <label class="form-check-label" for="career4">Technology & Computers</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q2', 'skilled')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career5" value="skilled">
+                            <label class="form-check-label" for="career5">Skilled Trades (construction, electrician, etc.)</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q2', 'creative')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career6" value="creative">
+                            <label class="form-check-label" for="career6">Creative / Arts</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q2', 'service')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="career" id="career7" value="service">
+                            <label class="form-check-label" for="career7">Customer Service / Retail</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 3: Hobbies & Skills -->
+                <div class="question" id="q3">
+                    <div class="question-title">3. What are your hobbies or things you enjoy doing? (Select all that apply)</div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby1')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby1" value="reading">
+                            <label class="form-check-label" for="hobby1">Reading / Writing</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby2')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby2" value="cooking">
+                            <label class="form-check-label" for="hobby2">Cooking / Baking</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby3')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby3" value="art">
+                            <label class="form-check-label" for="hobby3">Art / Drawing / Crafts</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby4')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby4" value="music">
+                            <label class="form-check-label" for="hobby4">Music / Singing</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby5')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby5" value="sports">
+                            <label class="form-check-label" for="hobby5">Sports / Fitness</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby6')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby6" value="computers">
+                            <label class="form-check-label" for="hobby6">Computers / Technology</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby7')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby7" value="sewing">
+                            <label class="form-check-label" for="hobby7">Sewing / Knitting</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="toggleCheckbox('hobby8')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="hobbies" id="hobby8" value="gardening">
+                            <label class="form-check-label" for="hobby8">Gardening</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 4: Work Schedule Preference -->
+                <div class="question" id="q4">
+                    <div class="question-title">4. What type of work schedule works best for you?</div>
+                    <div class="option-card" onclick="selectOption('q4', 'fulltime')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="schedule" id="schedule1" value="fulltime">
+                            <label class="form-check-label" for="schedule1">Full-time (40 hours/week)</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q4', 'parttime')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="schedule" id="schedule2" value="parttime">
+                            <label class="form-check-label" for="schedule2">Part-time (20-30 hours/week)</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q4', 'flexible')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="schedule" id="schedule3" value="flexible">
+                            <label class="form-check-label" for="schedule3">Flexible / Remote work</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q4', 'evening')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="schedule" id="schedule4" value="evening">
+                            <label class="form-check-label" for="schedule4">Evenings / Weekends</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Question 5: Career Goals -->
+                <div class="question" id="q5">
+                    <div class="question-title">5. What is your main goal?</div>
+                    <div class="option-card" onclick="selectOption('q5', 'immediate')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="goal" id="goal1" value="immediate">
+                            <label class="form-check-label" for="goal1">Immediate job to support my family</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q5', 'training')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="goal" id="goal2" value="training">
+                            <label class="form-check-label" for="goal2">Job training for better opportunities</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q5', 'education')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="goal" id="goal3" value="education">
+                            <label class="form-check-label" for="goal3">Finish my education / Get a degree</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q5', 'career')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="goal" id="goal4" value="career">
+                            <label class="form-check-label" for="goal4">Start a long-term career</label>
+                        </div>
+                    </div>
+                    <div class="option-card" onclick="selectOption('q5', 'business')">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="goal" id="goal5" value="business">
+                            <label class="form-check-label" for="goal5">Start my own business</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="nav-buttons">
+                    <button type="button" class="btn-nav btn-prev" id="prevBtn" onclick="prevQuestion()">Previous</button>
+                    <button type="button" class="btn-nav btn-next" id="nextBtn" onclick="nextQuestion()">Next</button>
+                </div>
+                
+                <!-- Submit Button (hidden initially) -->
+                <button type="button" class="btn-submit" id="submitBtn" onclick="showResults()" style="display: none;">See My Results</button>
+            </form>
+        </div>
+        
+        <!-- Results Section (hidden initially) -->
+        <div class="result-card" id="results">
+            <h2 class="text-center mb-4">Your Personalized Education & Career Path</h2>
+            <p class="text-center mb-5">Based on your responses, here are the best programs for you:</p>
+            
+            <div id="resultsContent"></div>
+            
+            <div class="text-center mt-4">
+                <a href="education.html" class="btn-path" style="background: var(--secondary); color: white; padding: 1rem 3rem; border-radius: 50px; text-decoration: none; display: inline-block;">Return to Education Page</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+        let answers = {
+            education: '',
+            career: '',
+            hobbies: [],
+            schedule: '',
+            goal: ''
+        };
+        
+        function selectOption(question, value) {
+            if (question === 'q1') {
+                document.querySelectorAll('input[name="education"]').forEach(el => {
+                    if (el.value === value) el.checked = true;
+                });
+                answers.education = value;
+            } else if (question === 'q2') {
+                document.querySelectorAll('input[name="career"]').forEach(el => {
+                    if (el.value === value) el.checked = true;
+                });
+                answers.career = value;
+            } else if (question === 'q4') {
+                document.querySelectorAll('input[name="schedule"]').forEach(el => {
+                    if (el.value === value) el.checked = true;
+                });
+                answers.schedule = value;
+            } else if (question === 'q5') {
+                document.querySelectorAll('input[name="goal"]').forEach(el => {
+                    if (el.value === value) el.checked = true;
+                });
+                answers.goal = value;
+            }
+            
+            // Visual feedback
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+        }
+        
+        function toggleCheckbox(id) {
+            let checkbox = document.getElementById(id);
+            checkbox.checked = !checkbox.checked;
+            
+            // Update answers.hobbies array
+            answers.hobbies = [];
+            document.querySelectorAll('input[name="hobbies"]:checked').forEach(el => {
+                answers.hobbies.push(el.value);
+            });
+            
+            // Visual feedback
+            let card = checkbox.closest('.option-card');
+            if (checkbox.checked) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        }
+        
+        function nextQuestion() {
+            // Validate current question
+            if (currentQuestion === 1 && !answers.education) {
+                alert('Please select your education level');
+                return;
+            }
+            if (currentQuestion === 2 && !answers.career) {
+                alert('Please select your career interest');
+                return;
+            }
+            if (currentQuestion === 3 && answers.hobbies.length === 0) {
+                alert('Please select at least one hobby');
+                return;
+            }
+            if (currentQuestion === 4 && !answers.schedule) {
+                alert('Please select your schedule preference');
+                return;
+            }
+            if (currentQuestion === 5 && !answers.goal) {
+                alert('Please select your goal');
+                return;
+            }
+            
+            // Hide current question
+            document.getElementById(`q${currentQuestion}`).classList.remove('active');
+            
+            // Show next question or submit button
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                document.getElementById(`q${currentQuestion}`).classList.add('active');
+                updateProgress();
+            }
+            
+            // Show/hide navigation buttons
+            if (currentQuestion === totalQuestions) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestion > 1) {
+                document.getElementById(`q${currentQuestion}`).classList.remove('active');
+                currentQuestion--;
+                document.getElementById(`q${currentQuestion}`).classList.add('active');
+                updateProgress();
+                
+                // Show next button, hide submit
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+        
+        function updateProgress() {
+            let progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        function showResults() {
+            // Hide survey
+            document.querySelector('.survey-container').style.display = 'none';
+            
+            // Generate results based on answers
+            let resultsHTML = '';
+            
+            // Education recommendations
+            if (answers.education === 'none' || answers.education === 'primary') {
+                resultsHTML += `
+                    <div class="career-path">
+                        <h4>📚 Literacy & Basic Education Program</h4>
+                        <p>Start with our foundational literacy and numeracy classes. These free classes will help you gain basic reading, writing, and math skills.</p>
+                        <p><strong>Next steps:</strong> Join our beginner classes meeting Mon/Wed 10am-12pm.</p>
+                    </div>
+                `;
+            }
+            
+            if (answers.education === 'secondary' || answers.education === 'highschool') {
+                resultsHTML += `
+                    <div class="career-path">
+                        <h4>🎓 GED Preparation Program</h4>
+                        <p>You're ready to earn your high school equivalency! Our GED prep classes will help you prepare for the exam in just 12 weeks.</p>
+                        <p><strong>Next steps:</strong> GED prep classes start every month. Call us to register.</p>
+                    </div>
+                `;
+            }
+            
+            // Career recommendations based on interests
+            if (answers.career === 'healthcare') {
+                resultsHTML += `
+                    <div class="career-path">
+                        <h4>🏥 Healthcare Training Program</h4>
+                        <p>Become a Certified Nursing Assistant (CNA) in 16 weeks. Includes clinical experience and job placement assistance.</p>
+                        <p><strong>Program starts:</strong> First Monday of each month.</p>
+                    </div>
+                `;
+            } else if (answers.career === 'business') {
+                resultsHTML += `
+                    <div class="career-path">
+                        <h4>💼 Office Administration Certificate</h4>
+                        <p>Learn Microsoft Office, customer service, and office skills. 8-week program with internship opportunities.</p>
+                    </div>
+                `;
+            } else if (answers.career === 'tech') {
+                resultsHTML += `
+                    <div class="career-path">
+                        <h4>💻 Computer Skills & IT Support</h4>
+                        <p>From basic computer literacy to IT support certification. Choose your level and learn at your own pace.</p>
+                    </div>
+                `;
+            }
+            
+            // Add general recommendations
+            resultsHTML += `
+                <div class="career-path">
+                    <h4>🤝 Career Counseling & Job Placement</h4>
+                    <p>Meet one-on-one with our career counselor to create a personalized plan. Get help with resume writing, interview prep, and job searching.</p>
+                </div>
+            `;
+            
+            // Display hobbies as strengths
+            resultsHTML += `
+                <div class="mt-4 mb-4">
+                    <h5>Your strengths & interests:</h5>
+                    ${answers.hobbies.map(hobby => `<span class="interest-tag">${hobby}</span>`).join(' ')}
+                </div>
+            `;
+            
+            document.getElementById('resultsContent').innerHTML = resultsHTML;
+            document.getElementById('results').classList.add('show');
+        }
+    </script>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>© 2024 Second Chance Organization. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

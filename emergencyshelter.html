@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Emergency Shelter - Second Chance</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find and book emergency shelter near you - Second Chance Organization">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        :root {
+            --primary: #4a6b8a;
+            --secondary: #c44545;
+            --accent: #2c3e50;
+            --light: #f8f9fa;
+            --dark: #1a2632;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--accent), var(--dark)) !important;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white !important;
+        }
+
+        .navbar-brand span {
+            color: var(--secondary);
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary) !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            color: var(--secondary) !important;
+            font-weight: 600;
+        }
+
+        /* Emergency Banner */
+        .emergency-banner {
+            background: linear-gradient(135deg, var(--secondary), #a53535);
+            color: white;
+            padding: 1rem 0;
+            margin-top: 76px;
+            text-align: center;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        .emergency-banner i {
+            margin-right: 0.5rem;
+            animation: ring 1.5s infinite;
+        }
+
+        @keyframes ring {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(15deg); }
+            20% { transform: rotate(-15deg); }
+            30% { transform: rotate(10deg); }
+            40% { transform: rotate(-10deg); }
+            50% { transform: rotate(5deg); }
+            60% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Hero Section */
+        .shelter-hero {
+            background: linear-gradient(135deg, rgba(44,62,80,0.95), rgba(26,38,50,0.95)), url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .shelter-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .shelter-hero h1 span {
+            color: var(--secondary);
+        }
+
+        /* Location Search */
+        .location-search {
+            background: white;
+            border-radius: 60px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        .location-search .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .location-search input {
+            border: none;
+            padding: 1rem 1.5rem;
+            flex: 1;
+            border-radius: 60px 0 0 60px;
+            font-size: 1.1rem;
+        }
+
+        .location-search input:focus {
+            outline: none;
+        }
+
+        .location-search button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0 60px 60px 0;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .location-search button:hover {
+            background: #a53535;
+        }
+
+        .use-my-location {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 1rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+        }
+
+        .use-my-location:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        /* Main Content */
+        .shelter-container {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Quick Stats */
+        .stats-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        /* Filters */
+        .filters-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .filter-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .filter-tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            margin: 0.3rem;
+            background: var(--light);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #dee2e6;
+        }
+
+        .filter-tag:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-tag.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .capacity-filter {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .capacity-badge {
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .capacity-badge.high {
+            background: #28a745;
+            color: white;
+        }
+
+        .capacity-badge.medium {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .capacity-badge.low {
+            background: #dc3545;
+            color: white;
+        }
+
+        .capacity-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .capacity-badge.active {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Map Container */
+        .map-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            height: 500px;
+        }
+
+        #shelterMap {
+            height: 100%;
+            width: 100%;
+        }
+
+        /* Shelter Cards */
+        .shelter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .shelter-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            position: relative;
+        }
+
+        .shelter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .shelter-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 2;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .badge-verified {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-women {
+            background: #e83e8c;
+            color: white;
+        }
+
+        .badge-children {
+            background: #20c997;
+            color: white;
+        }
+
+        .badge-family {
+            background: #fd7e14;
+            color: white;
+        }
+
+        .shelter-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .shelter-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+        }
+
+        .shelter-content {
+            padding: 1.5rem;
+        }
+
+        .shelter-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .shelter-distance {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .shelter-distance i {
+            margin-right: 0.3rem;
+        }
+
+        .shelter-address {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .amenity {
+            background: var(--light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .amenity i {
+            margin-right: 0.3rem;
+            color: var(--secondary);
+        }
+
+        .capacity-info {
+            margin-bottom: 1rem;
+        }
+
+        .capacity-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .capacity-fill.high {
+            background: var(--success);
+        }
+
+        .capacity-fill.medium {
+            background: var(--warning);
+        }
+
+        .capacity-fill.low {
+            background: var(--danger);
+        }
+
+        .capacity-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .spots-left {
+            font-weight: 600;
+        }
+
+        .spots-left.high {
+            color: var(--success);
+        }
+
+        .spots-left.medium {
+            color: var(--warning);
+        }
+
+        .spots-left.low {
+            color: var(--danger);
+        }
+
+        .spots-left.full {
+            color: var(--danger);
+        }
+
+        .book-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .book-btn.available {
+            background: var(--success);
+            color: white;
+        }
+
+        .book-btn.available:hover {
+            background: #218838;
+        }
+
+        .book-btn.limited {
+            background: var(--warning);
+            color: #333;
+        }
+
+        .book-btn.limited:hover {
+            background: #e0a800;
+        }
+
+        .book-btn.full {
+            background: #6c757d;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        /* Booking Modal */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--accent), var(--dark));
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .shelter-detail {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .guest-counter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .guest-counter button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--secondary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .guest-counter button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .guest-counter span {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .booking-summary {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .confirm-booking {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-booking:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Success Message */
+        .booking-success {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: scaleUp 0.5s ease;
+        }
+
+        @keyframes scaleUp {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .booking-code {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 5px;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .shelter-details {
+            text-align: left;
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        /* SOS Button */
+        .sos-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--danger);
+            color: white;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(220,53,69,0.5);
+            animation: pulse-red 2s infinite;
+            z-index: 1000;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220,53,69,0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(220,53,69,0); }
+            100% { box-shadow: 0 0 0 0 rgba(220,53,69,0); }
+        }
+
+        .sos-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Crisis Modal */
+        .crisis-modal .modal-header {
+            background: var(--danger);
+        }
+
+        .crisis-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .crisis-option {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: var(--light);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .crisis-option:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .crisis-option i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .shelter-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .shelter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sos-button {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .location-search {
+                border-radius: 30px;
+            }
+            
+            .location-search input {
+                font-size: 1rem;
+                padding: 0.8rem 1rem;
+            }
+            
+            .location-search button {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Second <span>Chance</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="education.html">Education</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="emergencyshelter.html">Emergency Shelter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="therapy.html">Therapy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="donate.html">Donate</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Emergency Banner -->
+    <div class="emergency-banner">
+        <div class="container">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>24/7 EMERGENCY SHELTER AVAILABLE</strong> - If you're in immediate danger, call 911 or our crisis hotline: <strong>(555) 123-4567</strong>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="shelter-hero">
+        <div class="container text-center">
+            <h1>Find <span>Emergency Shelter</span><br>Near You</h1>
+            <p class="lead mb-4">Safe, confidential, and immediate shelter for women and children in crisis</p>
+            
+            <!-- Location Search -->
+            <div class="location-search">
+                <div class="input-group">
+                    <input type="text" id="locationInput" class="form-control" placeholder="Enter your city, zip code, or address..." value="Los Angeles, CA">
+                    <button id="searchButton"><i class="fas fa-search me-2"></i>Search</button>
+                </div>
+            </div>
+            <a href="#" id="useMyLocation" class="use-my-location"><i class="fas fa-location-arrow me-2"></i>Use my current location</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="shelter-container">
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalShelters">8</div>
+                        <div class="stat-label">Total Shelters</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" id="availableSpots">47</div>
+                        <div class="stat-label">Available Beds</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" id="within5miles">5</div>
+                        <div class="stat-label">Within 5 Miles</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" id="emergencyBeds">12</div>
+                        <div class="stat-label">Emergency Beds</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="map-container">
+                    <div id="shelterMap"></div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <!-- Filters -->
+                <div class="filters-section">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="filter-title">Shelter Type</div>
+                            <div>
+                                <span class="filter-tag active" data-filter="all">All</span>
+                                <span class="filter-tag" data-filter="women">Women Only</span>
+                                <span class="filter-tag" data-filter="children">Children Only</span>
+                                <span class="filter-tag" data-filter="family">Families</span>
+                                <span class="filter-tag" data-filter="mixed">Mixed</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="filter-title">Capacity</div>
+                            <div class="capacity-filter">
+                                <span class="capacity-badge high" data-capacity="high">High (10+ beds)</span>
+                                <span class="capacity-badge medium" data-capacity="medium">Medium (3-9 beds)</span>
+                                <span class="capacity-badge low" data-capacity="low">Low (1-2 beds)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="filter-title">Amenities</div>
+                            <div>
+                                <span class="filter-tag" data-amenity="meals">Meals</span>
+                                <span class="filter-tag" data-amenity="medical">Medical</span>
+                                <span class="filter-tag" data-amenity="counseling">Counseling</span>
+                                <span class="filter-tag" data-amenity="showers">Showers</span>
+                                <span class="filter-tag" data-amenity="laundry">Laundry</span>
+                                <span class="filter-tag" data-amenity="childcare">Childcare</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="filter-title">Sort By</div>
+                            <select class="form-select" id="sortSelect">
+                                <option value="distance">Distance (Nearest first)</option>
+                                <option value="capacity">Capacity (Most available)</option>
+                                <option value="name">Name (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shelter Cards -->
+        <div class="shelter-grid" id="shelterGrid">
+            <!-- Shelters will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <!-- SOS Button -->
+    <button class="sos-button" data-bs-toggle="modal" data-bs-target="#crisisModal">
+        <i class="fas fa-exclamation"></i>
+    </button>
+
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book Shelter - Second Chance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="bookingModalBody">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crisis Modal -->
+    <div class="modal fade crisis-modal" id="crisisModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Need Immediate Help?</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="lead mb-4">If you're in crisis, help is available 24/7:</p>
+                    
+                    <div class="crisis-options">
+                        <a href="tel:911" class="crisis-option">
+                            <i class="fas fa-phone-alt"></i>
+                            <h6>Call 911</h6>
+                            <small>Emergency</small>
+                        </a>
+                        <a href="tel:5551234567" class="crisis-option">
+                            <i class="fas fa-headset"></i>
+                            <h6>Crisis Line</h6>
+                            <small>(555) 123-4567</small>
+                        </a>
+                        <a href="#" class="crisis-option">
+                            <i class="fas fa-comment-dots"></i>
+                            <h6>Text Support</h6>
+                            <small>Text HOME to 741741</small>
+                        </a>
+                    </div>
+                    
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        All calls are confidential. You are not alone.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // Shelter data
+        const shelters = [
+            {
+                id: 1,
+                name: "Hope Haven Women's Shelter",
+                address: "1234 Safe Street, Los Angeles, CA 90001",
+                lat: 34.0522,
+                lng: -118.2437,
+                distance: 0.8,
+                type: "women",
+                capacity: 25,
+                available: 8,
+                amenities: ["meals", "medical", "counseling", "showers", "laundry"],
+                verified: true,
+                phone: "(555) 111-2222",
+                description: "Safe, confidential shelter for women and children escaping domestic violence.",
+                rules: "No men allowed. Children welcome. Must be sober.",
+                image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: true
+            },
+            {
+                id: 2,
+                name: "Second Chance Family Shelter",
+                address: "5678 Hope Avenue, Los Angeles, CA 90002",
+                lat: 34.0622,
+                lng: -118.2537,
+                distance: 1.2,
+                type: "family",
+                capacity: 40,
+                available: 12,
+                amenities: ["meals", "showers", "laundry", "childcare", "education"],
+                verified: true,
+                phone: "(555) 222-3333",
+                description: "Family-focused shelter with educational programs and childcare.",
+                rules: "Families with children prioritized.",
+                image: "https://images.unsplash.com/photo-1469571486292-0ba58a3f106b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: true
+            },
+            {
+                id: 3,
+                name: "New Beginnings Women's Center",
+                address: "9102 Peace Boulevard, Los Angeles, CA 90003",
+                lat: 34.0422,
+                lng: -118.2337,
+                distance: 2.3,
+                type: "women",
+                capacity: 15,
+                available: 3,
+                amenities: ["meals", "counseling", "medical", "job training"],
+                verified: true,
+                phone: "(555) 333-4444",
+                description: "Comprehensive support including job training and counseling.",
+                rules: "Women only. Length of stay up to 90 days.",
+                image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: false
+            },
+            {
+                id: 4,
+                name: "Safe Harbor Shelter",
+                address: "3456 Refuge Road, Los Angeles, CA 90004",
+                lat: 34.0722,
+                lng: -118.2637,
+                distance: 3.1,
+                type: "mixed",
+                capacity: 50,
+                available: 15,
+                amenities: ["meals", "showers", "laundry", "medical", "counseling", "childcare"],
+                verified: true,
+                phone: "(555) 444-5555",
+                description: "Large shelter with comprehensive services for all.",
+                rules: "All welcome. Separate sleeping areas for women/families.",
+                image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: true
+            },
+            {
+                id: 5,
+                name: "Children's Peace Center",
+                address: "7890 Youth Lane, Los Angeles, CA 90005",
+                lat: 34.0322,
+                lng: -118.2237,
+                distance: 4.5,
+                type: "children",
+                capacity: 20,
+                available: 5,
+                amenities: ["meals", "education", "counseling", "recreation"],
+                verified: true,
+                phone: "(555) 555-6666",
+                description: "Specialized shelter for children with trauma-informed care.",
+                rules: "Children only (with guardian). Educational programs provided.",
+                image: "https://images.unsplash.com/photo-1542810634-71277ad95d5d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: true
+            },
+            {
+                id: 6,
+                name: "Mercy House",
+                address: "1357 Compassion Court, Los Angeles, CA 90006",
+                lat: 34.0822,
+                lng: -118.2737,
+                distance: 5.2,
+                type: "mixed",
+                capacity: 30,
+                available: 2,
+                amenities: ["meals", "showers", "counseling"],
+                verified: true,
+                phone: "(555) 666-7777",
+                description: "Faith-based shelter providing emergency housing.",
+                rules: "All welcome. Chapel services available but optional.",
+                image: "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: true
+            },
+            {
+                id: 7,
+                name: "Serenity Place",
+                address: "2468 Calm Street, Los Angeles, CA 90007",
+                lat: 34.0222,
+                lng: -118.2137,
+                distance: 6.0,
+                type: "women",
+                capacity: 12,
+                available: 1,
+                amenities: ["meals", "counseling", "job training"],
+                verified: true,
+                phone: "(555) 777-8888",
+                description: "Small, intimate shelter with personalized support.",
+                rules: "Women only. Focus on recovery and independence.",
+                image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: false
+            },
+            {
+                id: 8,
+                name: "Unity Shelter",
+                address: "3578 Together Avenue, Los Angeles, CA 90008",
+                lat: 34.0922,
+                lng: -118.2837,
+                distance: 7.1,
+                type: "mixed",
+                capacity: 35,
+                available: 0,
+                amenities: ["meals", "showers", "laundry", "medical"],
+                verified: true,
+                phone: "(555) 888-9999",
+                description: "Full capacity - please check back tomorrow.",
+                rules: "All welcome. Currently at capacity.",
+                image: "https://images.unsplash.com/photo-1488521787991-ce7c6e3c392b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                emergency: false
+            }
+        ];
+
+        // Initialize map
+        let map;
+        let markers = [];
+        let userMarker;
+
+        function initMap() {
+            const defaultCenter = [34.0522, -118.2437];
+            
+            map = L.map('shelterMap').setView(defaultCenter, 12);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Add markers for all shelters
+            updateMapMarkers(shelters);
+        }
+
+        function updateMapMarkers(sheltersToShow) {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Add new markers
+            sheltersToShow.forEach(shelter => {
+                const markerColor = getMarkerColor(shelter.available, shelter.capacity);
+                const marker = L.marker([shelter.lat, shelter.lng], {
+                    icon: L.divIcon({
+                        className: 'shelter-marker',
+                        html: `<div style="background: ${markerColor}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${shelter.available}</div>`,
+                        iconSize: [30, 30]
+                    })
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <b>${shelter.name}</b><br>
+                    ${shelter.address}<br>
+                    <span style="color: ${getAvailabilityColor(shelter.available, shelter.capacity)}">
+                        ${shelter.available} of ${shelter.capacity} beds available
+                    </span><br>
+                    <button onclick="openBookingModal(${shelter.id})" class="btn btn-sm btn-primary mt-2" style="background: var(--secondary); border: none;">Book Now</button>
+                `);
+                
+                markers.push(marker);
+            });
+        }
+
+        function getMarkerColor(available, capacity) {
+            const percentage = (available / capacity) * 100;
+            if (percentage > 30) return '#28a745';
+            if (percentage > 10) return '#ffc107';
+            return '#dc3545';
+        }
+
+        function getAvailabilityColor(available, capacity) {
+            const percentage = (available / capacity) * 100;
+            if (percentage > 30) return 'green';
+            if (percentage > 10) return 'orange';
+            return 'red';
+        }
+
+        // Render shelter cards
+        function renderShelterCards(sheltersToRender) {
+            const grid = document.getElementById('shelterGrid');
+            grid.innerHTML = '';
+            
+            sheltersToRender.forEach(shelter => {
+                const percentage = (shelter.available / shelter.capacity) * 100;
+                let capacityClass = '';
+                let spotsClass = '';
+                
+                if (percentage > 30) {
+                    capacityClass = 'high';
+                    spotsClass = 'high';
+                } else if (percentage > 10) {
+                    capacityClass = 'medium';
+                    spotsClass = 'medium';
+                } else {
+                    capacityClass = 'low';
+                    spotsClass = 'low';
+                }
+                
+                if (shelter.available === 0) {
+                    spotsClass = 'full';
+                }
+                
+                const card = document.createElement('div');
+                card.className = 'shelter-card';
+                card.innerHTML = `
+                    ${shelter.verified ? '<span class="shelter-badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>' : ''}
+                    <div class="shelter-image" style="background-image: url('${shelter.image}')"></div>
+                    <div class="shelter-content">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h3 class="shelter-name">${shelter.name}</h3>
+                            <span class="badge bg-${shelter.type === 'women' ? 'danger' : shelter.type === 'children' ? 'info' : shelter.type === 'family' ? 'warning' : 'secondary'}">
+                                ${shelter.type.charAt(0).toUpperCase() + shelter.type.slice(1)}
+                            </span>
+                        </div>
+                        <div class="shelter-distance">
+                            <i class="fas fa-location-dot"></i> ${shelter.distance} miles away
+                        </div>
+                        <div class="shelter-address">
+                            <i class="fas fa-map-pin"></i> ${shelter.address}
+                        </div>
+                        
+                        <div class="amenities">
+                            ${shelter.amenities.map(amenity => 
+                                `<span class="amenity"><i class="fas fa-${getAmenityIcon(amenity)}"></i> ${amenity.charAt(0).toUpperCase() + amenity.slice(1)}</span>`
+                            ).join('')}
+                        </div>
+                        
+                        <div class="capacity-info">
+                            <div class="capacity-bar">
+                                <div class="capacity-fill ${capacityClass}" style="width: ${percentage}%"></div>
+                            </div>
+                            <div class="capacity-text">
+                                <span>${shelter.available} of ${shelter.capacity} beds available</span>
+                                <span class="spots-left ${spotsClass}">
+                                    ${shelter.available === 0 ? 'Full' : 
+                                      shelter.available <= 2 ? 'Only few left!' : 
+                                      shelter.available <= 5 ? 'Limited' : 'Available'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <button class="book-btn ${shelter.available === 0 ? 'full' : shelter.available <= 2 ? 'limited' : 'available'}"
+                                ${shelter.available === 0 ? 'disabled' : ''}
+                                onclick="openBookingModal(${shelter.id})">
+                            <i class="fas fa-${shelter.available === 0 ? 'ban' : 'bed'} me-2"></i>
+                            ${shelter.available === 0 ? 'Currently Full' : 'Book Emergency Shelter'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            // Update stats
+            updateStats(sheltersToRender);
+        }
+
+        function getAmenityIcon(amenity) {
+            const icons = {
+                meals: 'utensils',
+                medical: 'kit-medical',
+                counseling: 'heart',
+                showers: 'shower',
+                laundry: 'soap',
+                childcare: 'children',
+                education: 'book',
+                'job training': 'briefcase',
+                recreation: 'futbol'
+            };
+            return icons[amenity] || 'circle-check';
+        }
+
+        function updateStats(sheltersToShow) {
+            document.getElementById('totalShelters').textContent = sheltersToShow.length;
+            
+            const totalAvailable = sheltersToShow.reduce((sum, s) => sum + s.available, 0);
+            document.getElementById('availableSpots').textContent = totalAvailable;
+            
+            const within5Miles = sheltersToShow.filter(s => s.distance <= 5).length;
+            document.getElementById('within5miles').textContent = within5Miles;
+            
+            const emergencyBeds = sheltersToShow.filter(s => s.emergency).reduce((sum, s) => sum + s.available, 0);
+            document.getElementById('emergencyBeds').textContent = emergencyBeds;
+        }
+
+        // Filter state
+        let currentFilters = {
+            type: 'all',
+            capacity: null,
+            amenities: []
+        };
+
+        document.querySelectorAll('.filter-tag[data-filter]').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tag[data-filter]').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentFilters.type = this.dataset.filter;
+                applyFilters();
+            });
+        });
+
+        document.querySelectorAll('.capacity-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                document.querySelectorAll('.capacity-badge').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentFilters.capacity = this.dataset.capacity;
+                applyFilters();
+            });
+        });
+
+        // Amenity filters
+        document.querySelectorAll('.filter-tag[data-amenity]').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('active');
+                
+                const amenity = this.dataset.amenity;
+                if (this.classList.contains('active')) {
+                    currentFilters.amenities.push(amenity);
+                } else {
+                    currentFilters.amenities = currentFilters.amenities.filter(a => a !== amenity);
+                }
+                
+                applyFilters();
+            });
+        });
+
+        
+        document.getElementById('sortSelect').addEventListener('change', function() {
+            applyFilters();
+        });
+
+        function applyFilters() {
+            let filtered = [...shelters];
+            
+         
+            if (currentFilters.type !== 'all') {
+                filtered = filtered.filter(s => s.type === currentFilters.type);
+            }
+            
+        
+            if (currentFilters.capacity) {
+                filtered = filtered.filter(s => {
+                    if (currentFilters.capacity === 'high') return s.available >= 10;
+                    if (currentFilters.capacity === 'medium') return s.available >= 3 && s.available <= 9;
+                    if (currentFilters.capacity === 'low') return s.available >= 1 && s.available <= 2;
+                    return true;
+                });
+            }
+            
+            // Filter by amenities
+            if (currentFilters.amenities.length > 0) {
+                filtered = filtered.filter(s => 
+                    currentFilters.amenities.every(a => s.amenities.includes(a))
+                );
+            }
+            
+   
+            const sortBy = document.getElementById('sortSelect').value;
+            filtered.sort((a, b) => {
+                if (sortBy === 'distance') return a.distance - b.distance;
+                if (sortBy === 'capacity') return b.available - a.available;
+                if (sortBy === 'name') return a.name.localeCompare(b.name);
+            });
+            
+            renderShelterCards(filtered);
+            updateMapMarkers(filtered);
+        }
+
+  
+        let currentShelter = null;
+
+        function openBookingModal(shelterId) {
+            currentShelter = shelters.find(s => s.id === shelterId);
+            
+            const modalBody = document.getElementById('bookingModalBody');
+            modalBody.innerHTML = `
+                <div class="shelter-detail">
+                    <h5 class="mb-3">${currentShelter.name}</h5>
+                    <p class="mb-2"><i class="fas fa-map-pin me-2"></i>${currentShelter.address}</p>
+                    <p class="mb-2"><i class="fas fa-phone me-2"></i>${currentShelter.phone}</p>
+                    <p class="mb-2"><i class="fas fa-info-circle me-2"></i>${currentShelter.description}</p>
+                </div>
+                
+                <h6 class="fw-bold mb-3">Number of people needing shelter</h6>
+                <div class="guest-counter">
+                    <button id="decrementGuests" onclick="changeGuestCount(-1)"><i class="fas fa-minus"></i></button>
+                    <span id="guestCount">1</span>
+                    <button id="incrementGuests" onclick="changeGuestCount(1)"><i class="fas fa-plus"></i></button>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Special requirements (optional)</label>
+                    <textarea class="form-control" id="specialRequirements" rows="2" placeholder="Medical needs, accessibility requirements, etc."></textarea>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="emergencyCheck">
+                    <label class="form-check-label" for="emergencyCheck">
+                        <i class="fas fa-exclamation-triangle text-danger me-1"></i>
+                        This is an emergency - I need shelter immediately
+                    </label>
+                </div>
+                
+                <div class="booking-summary">
+                    <h6 class="fw-bold mb-3">Booking Summary</h6>
+                    <div class="summary-item">
+                        <span>Shelter:</span>
+                        <span class="fw-bold">${currentShelter.name}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Available beds:</span>
+                        <span class="fw-bold" style="color: var(--success);">${currentShelter.available}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Your party size:</span>
+                        <span class="fw-bold" id="summaryGuests">1</span>
+                    </div>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="agreeTerms">
+                    <label class="form-check-label" for="agreeTerms">
+                        I confirm that the information provided is accurate and I agree to the shelter rules
+                    </label>
+                </div>
+                
+                <button class="confirm-booking" onclick="confirmBooking()">
+                    <i class="fas fa-check-circle me-2"></i>Confirm Booking
+                </button>
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            modal.show();
+        }
+
+        function changeGuestCount(change) {
+            const countSpan = document.getElementById('guestCount');
+            let count = parseInt(countSpan.textContent) + change;
+            
+            if (count < 1) count = 1;
+            if (currentShelter && count > currentShelter.available) {
+                count = currentShelter.available;
+                alert(`Only ${currentShelter.available} spots available.`);
+            }
+            
+            countSpan.textContent = count;
+            document.getElementById('summaryGuests').textContent = count;
+        }
+
+        function confirmBooking() {
+            const guests = parseInt(document.getElementById('guestCount').textContent);
+            const requirements = document.getElementById('specialRequirements')?.value || '';
+            const isEmergency = document.getElementById('emergencyCheck')?.checked || false;
+            const agreed = document.getElementById('agreeTerms')?.checked || false;
+            
+            if (!agreed) {
+                alert('Please agree to the shelter rules to continue');
+                return;
+            }
+            
+            // Generate booking code
+            const bookingCode = 'SC' + Date.now().toString().slice(-8) + Math.random().toString(36).substring(2, 5).toUpperCase();
+            
+            // Update shelter availability
+            currentShelter.available -= guests;
+            
+            // Show success message
+            const modalBody = document.getElementById('bookingModalBody');
+            modalBody.innerHTML = `
+                <div class="booking-success">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="mb-3">Booking Confirmed!</h3>
+                    <p class="mb-4">Your spot has been reserved at ${currentShelter.name}</p>
+                    
+                    <div class="booking-code">
+                        ${bookingCode}
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Please show this code when you arrive at the shelter.
+                    </div>
+                    
+                    <div class="shelter-details">
+                        <h6><i class="fas fa-map-pin me-2"></i>Shelter Address:</h6>
+                        <p class="mb-3">${currentShelter.address}</p>
+                        
+                        <h6><i class="fas fa-clock me-2"></i>Check-in Instructions:</h6>
+                        <p class="mb-3">Please arrive within 4 hours to secure your spot. Call if you're running late.</p>
+                        
+                        <h6><i class="fas fa-phone me-2"></i>Emergency Contact:</h6>
+                        <p class="mb-0">${currentShelter.phone}</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-outline-primary me-2" onclick="window.print()">
+                            <i class="fas fa-print me-2"></i>Print
+                        </button>
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Refresh the cards
+            applyFilters();
+        }
+
+        // Location search
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const location = document.getElementById('locationInput').value;
+            alert(`Searching for shelters near: ${location}\n\nIn a real application, this would connect to a geocoding API to find shelters in your area.`);
+        });
+
+        document.getElementById('useMyLocation').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    map.setView([lat, lng], 13);
+                    
+                    if (userMarker) {
+                        map.removeLayer(userMarker);
+                    }
+                    
+                    userMarker = L.marker([lat, lng], {
+                        icon: L.divIcon({
+                            className: 'user-location-marker',
+                            html: '<i class="fas fa-circle" style="color: var(--secondary); font-size: 24px;"></i>',
+                            iconSize: [24, 24]
+                        })
+                    }).addTo(map).bindPopup('Your current location');
+                    
+                    document.getElementById('locationInput').value = '📍 Using your location';
+                    
+                    alert('Location detected! In a real application, we would show shelters near your current location.');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            renderShelterCards(shelters);
+        });
+    </script>
+</body>
+</html>

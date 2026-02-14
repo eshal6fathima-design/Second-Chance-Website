@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Education & Jobs - Second Chance</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        :root { --primary: #4a6b8a; --secondary: #c44545; --accent: #2c3e50; }
+        
+        .navbar { background: linear-gradient(135deg, var(--accent), #1a2632) !important; }
+        .navbar-brand { color: white; font-weight: 700; font-size: 1.8rem; }
+        .navbar-brand span { color: var(--secondary); }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(44,62,80,0.9), rgba(26,38,50,0.9)), url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 6rem 0;
+            color: white;
+            margin-top: 76px;
+        }
+        
+        .path-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .path-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .path-card.women:hover { border-color: var(--secondary); }
+        .path-card.children:hover { border-color: var(--primary); }
+        
+        .path-icon {
+            font-size: 4rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .children-icon { color: var(--primary); }
+        
+        .btn-path {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        .btn-path.children { background: var(--primary); }
+        
+        .success-story {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .program-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .badge-custom {
+            background: var(--secondary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Second <span>Chance</span></a>
+            <a href="index.html" class="btn btn-outline-light">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-3 fw-bold mb-4">Education & Career Pathways</h1>
+            <p class="lead fs-3 mb-4">Everyone deserves the chance to learn, grow, and build a better future</p>
+            <p class="fs-5">Take our personalized survey to find the right education and job training path for you or your child</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Introduction -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-6 mb-4">Choose Your Path to a Brighter Future</h2>
+                <p class="fs-5">At Second Change, we believe that education and economic independence are the keys to breaking the cycle of abuse and poverty. Whether you're a woman seeking to build a career or a parent wanting to ensure your child's education, we're here to help.</p>
+            </div>
+        </div>
+
+        <!-- Two Paths -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="path-card women" onclick="window.location.href='women-education-survey.html'">
+                    <div class="path-icon">
+                        <ion-icon name="woman-outline"></ion-icon>
+                    </div>
+                    <h3 class="fw-bold mb-3">Women's Career Path</h3>
+                    <p class="mb-4">Take our personalized survey to discover education and job training programs that match your background, interests, and goals.</p>
+                    <div class="mb-3">
+                        <span class="badge-custom">GED Preparation</span>
+                        <span class="badge-custom ms-2">Vocational Training</span>
+                        <span class="badge-custom ms-2">College Pathways</span>
+                    </div>
+                    <a href="women-education-survey.html" class="btn-path">Start Women's Survey →</a>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="path-card children" onclick="window.location.href='childreneducationsurvey.html'">
+                    <div class="path-icon children-icon">
+                        <ion-icon name="happy-outline"></ion-icon>
+                    </div>
+                    <h3 class="fw-bold mb-3">Children's Education</h3>
+                    <p class="mb-4">Help us understand your child's educational needs so we can provide the right support, tutoring, and school placement assistance.</p>
+                    <div class="mb-3">
+                        <span class="badge-custom" style="background: var(--primary);">School Enrollment</span>
+                        <span class="badge-custom ms-2" style="background: var(--primary);">Tutoring</span>
+                        <span class="badge-custom ms-2" style="background: var(--primary);">After-school Programs</span>
+                    </div>
+                    <a href="childreneducationsurvey.html" class="btn-path children">Start Children's Survey →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Programs -->
+        <h2 class="text-center mb-4">Our Education & Job Programs</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="program-card">
+                    <h4>GED Preparation</h4>
+                    <p>Free classes to help women earn their high school equivalency diploma.</p>
+                    <p class="text-muted small">📚 12-week program | Flexible hours</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="program-card">
+                    <h4>Computer Skills</h4>
+                    <p>Basic to advanced computer training including Microsoft Office and digital literacy.</p>
+                    <p class="text-muted small">💻 8-week program | Beginner to advanced</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="program-card">
+                    <h4>Healthcare Training</h4>
+                    <p>CNA, medical assistant, and home health aide certification programs.</p>
+                    <p class="text-muted small">🏥 16-week program | Job placement assistance</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="program-card">
+                    <h4>Child Tutoring</h4>
+                    <p>One-on-one academic support for children K-12 in all subjects.</p>
+                    <p class="text-muted small">📖 Free | In-person and online options</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="program-card">
+                    <h4>School Enrollment</h4>
+                    <p>Help with school registration, supplies, and uniform assistance.</p>
+                    <p class="text-muted small">🎒 Year-round support</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="program-card">
+                    <h4>Job Readiness</h4>
+                    <p>Resume writing, interview prep, and job search assistance.</p>
+                    <p class="text-muted small">💼 Weekly workshops | One-on-one coaching</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Stories -->
+        <h2 class="text-center mt-5 mb-4">Success Stories</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="success-story">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;">
+                        <div>
+                            <h5 class="mb-1">Maria, 34</h5>
+                            <p class="text-muted small mb-0">Completed healthcare training</p>
+                        </div>
+                    </div>
+                    <p>"I came to Second Chance with nothing but my children. Through their job training program, I became a certified nursing assistant. Today, I work at a local hospital and can support my family."</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="success-story">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://images.unsplash.com/photo-1542810634-71277ad95d5d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80" class="rounded-circle me-3" width="60" height="60" style="object-fit: cover;">
+                        <div>
+                            <h5 class="mb-1">David, 12</h5>
+                            <p class="text-muted small mb-0">Tutoring program</p>
+                        </div>
+                    </div>
+                    <p>"I was struggling in school and felt like giving up. My tutor helped me understand math and now I'm getting B's! I want to be an engineer someday."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container text-center">
+            <p>© 2024 Second Chance Organization. All rights reserved. | <a href="index.html" class="text-white">Home</a> | <a href="donate.html" class="text-white">Donate</a></p>
+        </div>
+    </footer>
+</body>
+</html>
